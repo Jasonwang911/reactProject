@@ -11,11 +11,21 @@ const _filter = {
 };
 
 Router.get('/list', (req, res) => {
+	// 获取查询参数
+	const {
+		type
+	} = req.query;
+
 	// 清除所有数据
 	// User.remove({}, (e, d) => {});
-	User.find({}, (err, doc) => {
+	User.find({
+		type
+	}, (err, doc) => {
 		if (err) console.log(err)
-		return res.json(doc);
+		return res.json({
+			code: 0,
+			data: doc
+		});
 	});
 });
 

@@ -80,7 +80,6 @@ export function login({
 	user,
 	pwd
 }) {
-	console.log(user, pwd)
 	if (!user || !pwd) {
 		return errorMsg('用户密码必须输入');
 	}

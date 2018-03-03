@@ -31,7 +31,6 @@ class AuthRoute extends React.Component {
 		axios.get('/user/info')
 			.then(res => {
 				if (res.status === 200) {
-					console.log(res)
 					if (res.data.code === 0) {
 						// 有登陆信息
 						this.props.loadData(res.data.data);
@@ -39,7 +38,6 @@ class AuthRoute extends React.Component {
 						// 无登陆信息跳转到登陆页面
 						this.props.history.push('/login');
 					}
-					console.log(res.data)
 				}
 			})
 		// 是否登陆
