@@ -6,8 +6,15 @@ import {
 import {
 	withRouter
 } from 'react-router-dom'
+import {
+	connect
+} from 'react-redux'
 
 @withRouter
+@connect(
+	state => state.chat,
+	null
+)
 class NavLinkBar extends React.Component {
 	static propTypes = {
 		data: PropTypes.array.isRequired
@@ -22,6 +29,7 @@ class NavLinkBar extends React.Component {
 			<div>
 				<TabBar>{navList.map(v=>(
 					<TabBar.Item
+					badge={v.path === '/msg' ?this.props.unread : null}
 					key={v.path}
 					title={v.text}
 					icon={{uri:require(`./img/${v.icon}.png`)}}

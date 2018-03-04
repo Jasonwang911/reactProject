@@ -17,6 +17,7 @@ import {
 import {
 	regisger
 } from './../../redux/user.redux'
+import imoocForm from './../../component/imooc-form/imooc-form'
 import './../../index.css';
 
 @connect(
@@ -24,26 +25,31 @@ import './../../index.css';
 		regisger
 	}
 )
+@imoocForm
 class Register extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			user: '',
-			pwd: '',
-			repeatpwd: '',
-			type: 'genius' // 或者boss
-		}
+	// constructor(props) {
+	// 	super(props);
+	// 	this.state = {
+	// 		user: '',
+	// 		pwd: '',
+	// 		repeatpwd: '',
+	// 		type: 'genius' // 或者boss
+	// 	}
+	// }
+
+	componentDidMount() {
+		this.props.handleChange('type', 'genius');
 	}
 	// 输入框状态的修改
-	handleChange(key, val) {
-		this.setState({
-			[key]: val
-		})
-	}
+	// handleChange(key, val) {
+	// 	this.setState({
+	// 		[key]: val
+	// 	})
+	// }
 
 	handleRegister() {
 		// 输入数据的验证
-		this.props.regisger(this.state);
+		this.props.regisger(this.props.state);
 	}
 
 	render() {
@@ -56,23 +62,23 @@ class Register extends React.Component {
 				<WingBlank>
 					<List>
 						<InputItem
-						onChange={v=>this.handleChange('user', v)}
+						onChange={v=>this.props.handleChange('user', v)}
 						>用户名</InputItem>
 						<InputItem
 						type="password"
-						onChange={v=>this.handleChange('pwd', v)}
+						onChange={v=>this.props.handleChange('pwd', v)}
 						>密码</InputItem>
 						<InputItem
 						type="password"
-						onChange={v=>this.handleChange('repeatpwd', v)}
+						onChange={v=>this.props.handleChange('repeatpwd', v)}
 						>确认密码</InputItem>
 						<RadioItem 
-						checked={this.state.type === 'genius'}
-						onChange={()=>this.handleChange('type','genius')}
+						checked={this.props.state.type === 'genius'}
+						onChange={()=>this.props.handleChange('type','genius')}
 						>牛人</RadioItem>
 						<RadioItem 
-						checked={this.state.type === 'boss'}
-						onChange={()=>this.handleChange('type','boss')}
+						checked={this.props.state.type === 'boss'}
+						onChange={()=>this.props.handleChange('type','boss')}
 						>BOSS</RadioItem>
 					</List>
 					<WhiteSpace size="xl" />

@@ -3,6 +3,7 @@ const Router = express.Router();
 const utils = require('utility');
 const models = require('./model');
 const User = models.getModel('user');
+const Chat = models.getModel('chat');
 
 // 统一的查询条件,禁止查询密码和文档
 const _filter = {
@@ -26,6 +27,42 @@ Router.get('/list', (req, res) => {
 			code: 0,
 			data: doc
 		});
+	});
+});
+
+// 获取 聊天列表
+Router.get('/getmsgList', (req, res) => {
+	const user = req.cookies.userid;
+	let users = {};
+	// 查询用户信息， 这一步和下一步是做的相当于mySQL的联表操作
+	User.find({}, (err, userdoc) => {
+		userdoc.forEach(v => {
+			users[v._id] = {
+				name: v.user,
+				avatar: v.avatar
+			}
+		})
+	});
+	// 查询消息列表 {'$or':[{from:user,to:user}]} 
+	Chat.find({
+		'$or': [{
+			from: user
+		}, {
+			to: user
+		}]
+	}, (err, doc) => {
+		if (!err) {
+			return res.json({
+				code: 0,
+				msgs: doc,
+				users: users
+			});
+		} else {
+			return res.json({
+				code: 1,
+				msg: '后台错误'
+			});
+		}
 	});
 });
 
@@ -100,7 +137,7 @@ Router.post('/register', (req, res) => {
 			if (e) {
 				return res.json({
 					code: 1,
-					mdg: '后台错误'
+					msg: '后台错误'
 				});
 			}
 			const {

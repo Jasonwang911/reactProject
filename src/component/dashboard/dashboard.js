@@ -10,6 +10,10 @@ import {
 import {
 	connect
 } from 'react-redux'
+import {
+	getMsgList,
+	recvMsg
+} from './../../redux/chat.redux'
 import NavLinkBar from './../navlink/navlink'
 import Boss from './../../component/boss/boss'
 import Genius from './../../component/genius/genius'
@@ -21,10 +25,17 @@ function Msg() {
 }
 
 @connect(
-	state => state,
-	null
+	state => state, {
+		getMsgList,
+		recvMsg
+	}
 )
 class DashBoard extends React.Component {
+	componentDidMount() {
+		this.props.getMsgList();
+		this.props.recvMsg();
+	}
+
 	render() {
 		const {
 			pathname
@@ -60,7 +71,9 @@ class DashBoard extends React.Component {
 
 		return (
 			<div>
-				<NavBar className="fixd-header" mode="dark">{navList.find(v => v.path === pathname).title}</NavBar>
+				<NavBar className="fixd-header" mode="dark">
+					{navList.find(v => v.path === pathname).title}
+				</NavBar>
 				<div style={{position:'relative',zIndex:10}}>
 					<Switch>
 						{navList.map(v=> (

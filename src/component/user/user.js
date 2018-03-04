@@ -3,6 +3,9 @@ import {
 	connect
 } from 'react-redux'
 import {
+	logoutSubmit
+} from './../../redux/user.redux'
+import {
 	Result,
 	WhiteSpace,
 	List,
@@ -11,16 +14,16 @@ import {
 	Modal
 } from 'antd-mobile'
 import browserCookie from 'browser-cookies'
+import {
+	Redirect
+} from 'react-router-dom'
 
 @connect(
-	state => state.user,
-	null
+	state => state.user, {
+		logoutSubmit
+	}
 )
 class User extends React.Component {
-	constructor(props) {
-		super(props);
-		this.logout = this.logout.bind(this)
-	}
 
 	logout() {
 		// browserCookie.erase('userid');
@@ -33,7 +36,7 @@ class User extends React.Component {
 			text: '确定',
 			onPress: () => {
 				browserCookie.erase('userid');
-				window.location.href = window.location.href;
+				this.props.logoutSubmit();
 			}
 		}, ])
 	}
@@ -66,7 +69,7 @@ class User extends React.Component {
   			</WingBlank>
 			</div>
 			) :
-			null
+			(<Redirect to={props.redirectTo} />)
 	}
 }
 

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const DB_URL = 'mongodb://localhost:27017/imooc-chat';
 
 const models = {
+	// 用户相关的数据模型
 	user: {
 		'user': {
 			type: String,
@@ -37,8 +38,33 @@ const models = {
 			type: String
 		}
 	},
+	// 聊天的数据模型
 	chat: {
-
+		'chatId': {
+			type: String,
+			require: true
+		},
+		'read': {
+			type: Boolean,
+			default: false
+		},
+		'from': {
+			type: String,
+			require: true
+		},
+		'to': {
+			type: String,
+			require: true
+		},
+		content: {
+			type: String,
+			require: true,
+			default: ''
+		},
+		'create_time': {
+			type: Number,
+			default: new Date().getTime()
+		}
 	}
 }
 
