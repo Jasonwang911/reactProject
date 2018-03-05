@@ -2,7 +2,9 @@ import React from 'react'
 import {
 	List,
 	InputItem,
-	NavBar
+	NavBar,
+	Icon,
+	Grid
 } from 'antd-mobile'
 import {
 	connect
@@ -12,6 +14,9 @@ import {
 	sendMsg,
 	recvMsg
 } from './../../redux/chat.redux'
+import {
+	getChatId
+} from './../../util'
 
 @connect(
 	state => state, {
@@ -25,20 +30,15 @@ class Chat extends React.Component {
 		super(props);
 		this.state = {
 			text: '',
-			msg: []
+			showEmoji: false
 		}
 	}
 
 	componentDidMount() {
-		// this.props.getMsgList();
-		// this.props.recvMsg();
-		// 监听全局的消息
-		// socket.on('recvMsg', (data) => {
-		// 	console.log(data)
-		// 	this.setState({
-		// 		msg: [...this.state.msg, data.text]
-		// 	})
-		// })
+		if (this.props.chat.chatmsg.length === 0) {
+			this.props.getMsgList();
+			this.props.recvMsg();
+		}
 	}
 
 	handleSubmit() {
@@ -53,41 +53,51 @@ class Chat extends React.Component {
 		this.setState({
 			text: ''
 		});
-		// console.log(this.state.text)
-		// socket.emit('sendMsg', {
-		// 	text: this.state.text
-		// })
-		// this.setState({
-		// 	text: ''
-		// });
 	}
 
 	render() {
-		const user = this.props.match.params.user;
+		const emoji = '☀ ☁ ☔ ⚡ ☺ ☕ ✌ ☝ ❤ ♥ ☺ ☎ ✂ ✉ ✒ 📎 ✏ ☕ ⌛ ⌚ ❄ ⚡ ♻ ♈ ♉ ♊ ♋ ♌ ♍ ♎ ♏ ♐ ♑ ♒ ♓ ♠ ♥ ♣ ♦ ✔ ☑ 〰 〽'.split(' ').filter(v => v).map(v => ({
+			text: v
+		}));
+
+		const userid = this.props.match.params.user;
 		const Item = List.Item;
+		const users = this.props.chat.users;
+		if (!users[userid]) {
+			return null
+		}
+		const chatid = getChatId(userid, this.props.user._id);
+		const chatmsgs = this.props.chat.chatmsg.filter(v => v.chatid === chatid);
 		return (
 			<div id="chat-page">
-				<NavBar mode="dark">
-					{user}
+				<NavBar 
+				icon = {
+					(<Icon type="left" />)
+				}
+				onLeftClick={() => {
+					this.props.history.goBack();
+				}}
+				mode="dark">
+					{users[userid].name}
 				</NavBar>
 
-				{this.props.chat.chatmsg.map(v => (
-					v.from === user ? (
+				{chatmsgs.map(v => {
+					const avatar = require(`./../img/${users[v.from].avatar}.png`);
+				return v.from === userid ? (
 						<List key={v._id}>
 							<Item
+							thumb={avatar}
 							>{v.content}</Item>
 						</List>
 					) : (
 						<List key={v._id}>
 							<Item 
+							extra={<img src={avatar} alt="" />}
 							className="chat-me"
-							extra = {
-								'avatar'
-							}
 							>{v.content}</Item>
 						</List>
 					)
-				))}
+				})}
 				<div className="stick-footer">
 					<List>
 						<InputItem
@@ -96,11 +106,26 @@ class Chat extends React.Component {
 						onChange={v=>{
 							this.setState({text:v})
 						}}
-						extra={(<span onClick={this.handleSubmit.bind(this)}>发送</span>)}
+						extra={
+							<div>
+								<span
+								style={{marginRight:10}}
+								>♥</span>
+								<span onClick={this.handleSubmit.bind(this)}>发送</span>
+							</div>
+						}
 						></InputItem>
 					</List>
-				</div>
-			</div>
+					{ 
+						this.state.showEmoji ? 
+						<Grid
+						columnNum={9}
+						carouselMaxRow={4}
+						isCarousel={true}
+						data={emoji} ></Grid>
+						: null
+					}
+				</div> < /div>
 		)
 	}
 }

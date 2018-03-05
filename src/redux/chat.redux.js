@@ -14,6 +14,7 @@ const MSG_READ = 'MSG_READ';
 
 const initStat = {
 	chatmsg: [],
+	users: {},
 	// 未读信息列表
 	unread: 0
 }
@@ -22,13 +23,16 @@ export function chat(state = initStat, action) {
 	switch (action.type) {
 		case MSG_LIST:
 			return { ...state,
-				chatmsg: action.payload,
-				unread: action.payload.filter(v => !v.read).length
+				chatmsg: action.payload.msgs,
+				users: action.payload.users,
+				unread: action.payload.msgs.filter(v => !v.read && v.to === action.payload.userid).length
 			}
 		case MSG_RECV:
+			const n = action.payload.to === action.payload.userid ? 1 : 0;
+			console.log(state.unread, n)
 			return { ...state,
-				chatmsg: [...state.chatmsg, action.payload],
-				unread: state.unread + 1
+				chatmsg: [...state.chatmsg, action.payload.msg],
+				unread: state.unread + n
 			}
 			// case MSG_READ:
 		default:
@@ -37,27 +41,36 @@ export function chat(state = initStat, action) {
 }
 
 // action
-function msgList(msgs) {
+function msgList(msgs, users, userid) {
 	return {
 		type: 'MSG_LIST',
-		payload: msgs
+		payload: {
+			msgs,
+			users,
+			userid
+		}
 	}
 }
 
-function msgRecv(msg) {
+function msgRecv(msg, userid) {
 	return {
 		type: MSG_RECV,
-		payload: msg
+		payload: {
+			msg,
+			userid
+		}
 	};
 }
 
 // 获取聊天记录
 export function getMsgList() {
-	return dispatch => {
+	return (dispatch, getState) => {
 		axios.get('/user/getmsgList')
 			.then(res => {
 				if (res.status === 200 && res.data.code === 0) {
-					dispatch(msgList(res.data.msgs))
+					// 当前登录用户的id
+					const userid = getState().user._id;
+					dispatch(msgList(res.data.msgs, res.data.users, userid))
 				}
 			})
 	}
@@ -65,10 +78,11 @@ export function getMsgList() {
 
 // 进入聊天页面后开始接收信息
 export function recvMsg() {
-	return dispatch => {
+	return (dispatch, getState) => {
 		socket.on('recvMsg', (data) => {
-			console.log('recvMsg', data);
-			dispatch(msgRecv(data));
+			// 当前登录用户的id
+			const userid = getState().user._id;
+			dispatch(msgRecv(data, userid));
 		})
 	}
 }
@@ -80,11 +94,6 @@ export function sendMsg({
 	msg
 }) {
 	return () => {
-		console.log('sendMsg', {
-			from,
-			to,
-			msg
-		})
 		socket.emit('sendMsg', {
 			from,
 			to,

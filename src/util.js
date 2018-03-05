@@ -16,3 +16,8 @@ export function getRedirectPath({
 
 	return url;
 }
+
+// 获取chatid 用来过滤聊天信息
+export function getChatId(userId, targetId) {
+	return [userId, targetId].sort().join('_');
+}

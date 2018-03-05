@@ -21,7 +21,7 @@ Router.get('/list', (req, res) => {
 	// User.remove({}, (e, d) => {});
 	User.find({
 		type
-	}, (err, doc) => {
+	}, _filter, (err, doc) => {
 		if (err) console.log(err)
 		return res.json({
 			code: 0,

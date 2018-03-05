@@ -7,63 +7,63 @@ const models = {
 	// 用户相关的数据模型
 	user: {
 		'user': {
-			type: String,
-			require: true
+			'type': String,
+			'require': true
 		},
 		'pwd': {
-			type: String,
-			require: true
+			'type': String,
+			'require': true
 		},
 		'type': {
-			type: String,
-			require: true
+			'type': String,
+			'require': true
 		},
 		// 头像
 		'avatar': {
-			type: String
+			'type': String
 		},
 		// 个人简介或者职位简介
 		'desc': {
-			type: String
+			'type': String
 		},
 		// 职位名
 		'title': {
-			type: String
+			'type': String
 		},
 		// boss的独有字段
 		'company': {
-			type: String
+			'type': String
 		},
 		'money': {
-			type: String
+			'type': String
 		}
 	},
 	// 聊天的数据模型
 	chat: {
-		'chatId': {
-			type: String,
-			require: true
+		'chatid': {
+			'type': String,
+			'require': true
 		},
 		'read': {
-			type: Boolean,
-			default: false
+			'type': Boolean,
+			'default': false
 		},
 		'from': {
-			type: String,
-			require: true
+			'type': String,
+			'require': true
 		},
 		'to': {
-			type: String,
-			require: true
+			'type': String,
+			'require': true
 		},
 		content: {
-			type: String,
-			require: true,
-			default: ''
+			'type': String,
+			'require': true,
+			'default': ''
 		},
 		'create_time': {
-			type: Number,
-			default: new Date().getTime()
+			'type': Number,
+			'default': new Date().getTime()
 		}
 	}
 }
