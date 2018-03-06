@@ -39,6 +39,14 @@ class Chat extends React.Component {
 			this.props.getMsgList();
 			this.props.recvMsg();
 		}
+
+	}
+
+	fixCarousel() {
+		// 解决antd-mobile Guid 显示问题
+		setTimeout(function() {
+			window.dispatchEvent(new Event('resize'))
+		}, 0);
 	}
 
 	handleSubmit() {
@@ -51,7 +59,7 @@ class Chat extends React.Component {
 			msg
 		});
 		this.setState({
-			text: ''
+			text: '',
 		});
 	}
 
@@ -110,6 +118,12 @@ class Chat extends React.Component {
 							<div>
 								<span
 								style={{marginRight:10}}
+								onClick={() => {
+									this.setState({
+										showEmoji: !this.state.showEmoji
+									})
+									this.fixCarousel()
+								}}
 								>♥</span>
 								<span onClick={this.handleSubmit.bind(this)}>发送</span>
 							</div>
@@ -122,7 +136,13 @@ class Chat extends React.Component {
 						columnNum={9}
 						carouselMaxRow={4}
 						isCarousel={true}
-						data={emoji} ></Grid>
+						data={emoji} 
+						onClick={ el => {
+							this.setState({
+								text: this.state.text + el.text
+							})
+						}}
+						></Grid>
 						: null
 					}
 				</div> < /div>

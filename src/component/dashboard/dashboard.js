@@ -18,11 +18,8 @@ import NavLinkBar from './../navlink/navlink'
 import Boss from './../../component/boss/boss'
 import Genius from './../../component/genius/genius'
 import User from './../../component/user/user'
+import Msg from './../../component/msg/msg'
 
-
-function Msg() {
-	return <div>消息列表</div>
-}
 
 @connect(
 	state => state, {
