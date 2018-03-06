@@ -29,7 +29,8 @@ io.on('connection', (socket) => {
 			chatid,
 			from,
 			to,
-			content: msg
+			content: msg,
+			create_time: new Date().getTime()
 		};
 		Chat.create(createType, (err, doc) => {
 			console.log(doc)
