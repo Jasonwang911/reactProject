@@ -33,7 +33,7 @@ io.on('connection', (socket) => {
 			create_time: new Date().getTime()
 		};
 		Chat.create(createType, (err, doc) => {
-			console.log(doc)
+			// console.log(doc)
 			if (!err) {
 				io.emit('recvMsg', Object.assign({}, doc._doc));
 			}

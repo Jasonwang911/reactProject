@@ -12,7 +12,8 @@ import {
 import {
 	getMsgList,
 	sendMsg,
-	recvMsg
+	recvMsg,
+	readMsg
 } from './../../redux/chat.redux'
 import {
 	getChatId
@@ -22,7 +23,8 @@ import {
 	state => state, {
 		getMsgList,
 		sendMsg,
-		recvMsg
+		recvMsg,
+		readMsg
 	}
 )
 class Chat extends React.Component {
@@ -39,7 +41,12 @@ class Chat extends React.Component {
 			this.props.getMsgList();
 			this.props.recvMsg();
 		}
+	}
 
+	componentWillUnmount() {
+		// 标记消息已读
+		const to = this.props.match.params.user;
+		this.props.readMsg(to);
 	}
 
 	fixCarousel() {
@@ -71,6 +78,7 @@ class Chat extends React.Component {
 		const userid = this.props.match.params.user;
 		const Item = List.Item;
 		const users = this.props.chat.users;
+		console.log(userid, users, users[userid])
 		if (!users[userid]) {
 			return null
 		}
