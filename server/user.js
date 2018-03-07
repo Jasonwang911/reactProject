@@ -66,6 +66,38 @@ Router.get('/getmsgList', (req, res) => {
 	});
 });
 
+// 标记已读信息
+Router.post('/readmsg', (req, res) => {
+	const userid = req.cookies.userid;
+	const {
+		from
+	} = req.body;
+	console.log(from)
+	Chat.update({
+		from,
+		to: userid
+	}, {
+		'$set': {
+			read: true
+		}
+	}, {
+		'multi': true
+	}, (err, doc) => {
+		if (!err) {
+			console.log(doc)
+			return res.json({
+				code: 0,
+				num: doc.nModified
+			});
+		} else {
+			return res.json({
+				code: 1,
+				msg: '修改失败'
+			})
+		}
+	})
+})
+
 // 个人详细信息提交页面
 Router.post('/update', (req, res) => {
 	const userid = req.cookies.userid;
