@@ -145,7 +145,8 @@ class Chat extends React.Component {
 						></Grid>
 						: null
 					}
-				</div> < /div>
+				</div> <
+			/div>
 		)
 	}
 }
