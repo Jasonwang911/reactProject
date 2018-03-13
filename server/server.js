@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const userRouter = require('./user');
 const models = require('./model');
 const Chat = models.getModel('chat');
+const path = require('path');
 
 const app = express();
 
@@ -45,6 +46,16 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 
 app.use('/user', userRouter)
+app.use((req, res, next) => {
+	if (req.url.startsWith('/user/') || req.url.startsWith('/static')) {
+		return next()
+	} else {
+		console.log('path reslove:' + path.resolve('build/index.html'))
+		return res.sendFile(path.resolve('build/index.html'))
+	}
+})
+// express中间件，拦截路由
+app.use('/', express.static(path.resolve('build')))
 
 app.get('/', (req, res) => {
 	res.send(`<h1>hello boss！</h1>`);

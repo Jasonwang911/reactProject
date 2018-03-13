@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import io from 'socket.io-client'
 // 处理跨域,手动链接 ws
-const socket = io('ws://192.168.100.10:9093');
+const socket = io('ws://192.168.100.189:9093');
 
 
 // 获取聊天列表
@@ -90,21 +90,34 @@ function msgRead({
 
 // 标记已读信息
 export function readMsg(from) {
-	return (dispatch, getState) => {
-		axios.post('/user/readmsg', {
-				from
-			})
-			.then(res => {
-				const userid = getState().user._id;
-				if (res.status === 200 && res.data.code === 0) {
-					dispatch(msgRead({
-						userid,
-						from,
-						num: res.data.num
-					}))
-				}
-			})
+	return async (dispatch, getState) => {
+		const res = await axios.post('/user/readmsg', {
+			from
+		})
+		const userid = getState().user._id;
+		if (res.status === 200 && res.data.code === 0) {
+			dispatch(msgRead({
+				userid,
+				from,
+				num: res.data.num
+			}))
+		}
 	}
+	// return (dispatch, getState) => {
+	// 	axios.post('/user/readmsg', {
+	// 			from
+	// 		})
+	// 		.then(res => {
+	// 			const userid = getState().user._id;
+	// 			if (res.status === 200 && res.data.code === 0) {
+	// 				dispatch(msgRead({
+	// 					userid,
+	// 					from,
+	// 					num: res.data.num
+	// 				}))
+	// 			}
+	// 		})
+	// }
 }
 
 // 获取聊天记录

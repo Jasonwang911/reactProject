@@ -1,7 +1,6 @@
 import React from 'react'
 import {
-	Route,
-	Switch
+	Route
 } from 'react-router-dom'
 import './../../index.css'
 import {
@@ -19,6 +18,7 @@ import Boss from './../../component/boss/boss'
 import Genius from './../../component/genius/genius'
 import User from './../../component/user/user'
 import Msg from './../../component/msg/msg'
+import QueueAnim from 'rc-queue-anim'
 
 
 @connect(
@@ -68,20 +68,20 @@ class DashBoard extends React.Component {
 			component: User
 		}]
 
+		const page = navList.find(v => v.path === pathname)
+
 		return (
 			<div>
 				<NavBar className="fixd-header" mode="dark">
 					{navList.find(v => v.path === pathname).title}
 				</NavBar>
 				<div style={{position:'relative',zIndex:10}}>
-					<Switch>
-						{navList.map(v=> (
-							<Route path={v.path} component={v.component}
-								key={v.path}
-							 >
-							</Route>
-						))}
-					</Switch>
+					<QueueAnim type="scaleX" duration={800}>
+						<Route path={page.path} component={page.component}
+							key={page.path}
+						 >
+						</Route>
+					</QueueAnim>
 				</div>
 				<NavLinkBar data={navList}></NavLinkBar>
 			</div>
