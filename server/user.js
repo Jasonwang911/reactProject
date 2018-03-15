@@ -42,28 +42,29 @@ Router.get('/getmsgList', (req, res) => {
 				avatar: v.avatar
 			}
 		})
+		// 查询消息列表 {'$or':[{from:user,to:user}]} 
+		Chat.find({
+			'$or': [{
+				from: user
+			}, {
+				to: user
+			}]
+		}, (err, doc) => {
+			if (!err) {
+				return res.json({
+					code: 0,
+					msgs: doc,
+					users: users
+				});
+			} else {
+				return res.json({
+					code: 1,
+					msg: '后台错误'
+				});
+			}
+		});
 	});
-	// 查询消息列表 {'$or':[{from:user,to:user}]} 
-	Chat.find({
-		'$or': [{
-			from: user
-		}, {
-			to: user
-		}]
-	}, (err, doc) => {
-		if (!err) {
-			return res.json({
-				code: 0,
-				msgs: doc,
-				users: users
-			});
-		} else {
-			return res.json({
-				code: 1,
-				msg: '后台错误'
-			});
-		}
-	});
+
 });
 
 // 标记已读信息

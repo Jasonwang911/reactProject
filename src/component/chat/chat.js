@@ -80,6 +80,7 @@ class Chat extends React.Component {
 		const userid = this.props.match.params.user;
 		const Item = List.Item;
 		const users = this.props.chat.users;
+		console.log(userid, users, users[userid])
 		if (!users[userid]) {
 			return null
 		}
@@ -155,7 +156,8 @@ class Chat extends React.Component {
 						></Grid>
 						: null
 					}
-				</div> < /div>
+				</div> <
+			/div>
 		)
 	}
 }

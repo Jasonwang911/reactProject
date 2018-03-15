@@ -2,7 +2,11 @@ import axios from 'axios'
 
 import io from 'socket.io-client'
 // 处理跨域,手动链接 ws
+<<<<<<< HEAD
 const socket = io('ws://192.168.100.189:9093');
+=======
+const socket = io('ws://192.168.2.193:9093');
+>>>>>>> 420f0ed582896a85f4d9b7581412dc9bbbb8f699
 
 
 // 获取聊天列表

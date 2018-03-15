@@ -66,7 +66,8 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "server": "nodemon server/server.js"
+    "server": "nodemon --exec babel-node server/server.js NODE_ENV=test",
+    "server_bak": "nodemon server/server.js"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -108,8 +109,7 @@
     ],
     "plugins": [
       [
-        "import",
-        {
+        "import", {
           "libraryName": "antd-mobile",
           "style": "css"
         }
