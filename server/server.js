@@ -1,11 +1,25 @@
 import express from 'express';
-// const express = require('express');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const userRouter = require('./user');
-const models = require('./model');
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import userRouter from './user';
+import models from './model';
+import path from 'path';
+// react ssr
+// import React from 'react';
+import {
+	renderToString
+} from 'react-dom/server'
 const Chat = models.getModel('chat');
-const path = require('path');
+
+
+// import React from 'react';
+// const express = require('express');
+// const bodyParser = require('body-parser');
+// const cookieParser = require('cookie-parser');
+// const userRouter = require('./user');
+// const models = require('./model');
+// const Chat = models.getModel('chat');
+// const path = require('path');
 
 const app = express();
 
@@ -16,7 +30,6 @@ const io = require('socket.io')(server);
 // 监听事件
 io.on('connection', (socket) => {
 	// socket 是当前链接的请求，io则是全局的连接请求
-	// console.log('user login')
 	socket.on('sendMsg', (data) => {
 		console.log('服务端接受消息了', data)
 		// 发送一次全局的事件，广播给全局
@@ -35,7 +48,6 @@ io.on('connection', (socket) => {
 			create_time: new Date().getTime()
 		};
 		Chat.create(createType, (err, doc) => {
-			// console.log(doc)
 			if (!err) {
 				io.emit('recvMsg', Object.assign({}, doc._doc));
 			}
@@ -55,12 +67,9 @@ app.use((req, res, next) => {
 		return res.sendFile(path.resolve('build/index.html'))
 	}
 })
-// express中间件，拦截路由
-app.use('/', express.static(path.resolve('build')))
 
-app.get('/', (req, res) => {
-	res.send(`<h1>hello boss！</h1>`);
-});
+// express中间件，拦截路由
+app.use('/', express.static(path.resolve('build')));
 
 server.listen(9093, () => {
 	console.log(`Node app start at prot 9093`);
